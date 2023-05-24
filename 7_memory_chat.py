@@ -1,7 +1,7 @@
 # 拥有记忆的聊天
 
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "xxx"
 
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI

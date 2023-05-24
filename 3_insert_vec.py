@@ -3,7 +3,7 @@
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "xxx"
 embeddings = OpenAIEmbeddings()
 
 class PineconeDB():
