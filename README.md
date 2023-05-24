@@ -1,6 +1,8 @@
 # LangChain 实用基础案例
-LangChain & OpenAI & python & pinecone
-用最精简的代码演示LangChain的部分基础功能，能极大地帮助你理解LangChain，构建自己的AI应用。
+* LangChain & OpenAI & python & pinecone
+* 这里没有多余的代码，没有复杂的配置。
+* 只有用最精简的代码演示LangChain的部分基础功能，
+* 极大地帮助你理解LangChain，构建自己的AI应用。
 
 ##
 
