@@ -74,7 +74,7 @@ text = "Hi! It's time for the beach"
 text_embedding = embeddings.embed_query(text)
 ```
 
-#### Prompts
+#### Prompts - 指引AI生成内容
 * PromptTemplate
 ```py
 from langchain.llms import OpenAI
@@ -95,8 +95,75 @@ prompt = PromptTemplate(
 final_prompt = prompt.format(location='GuangZhou')
 llm(final_prompt)
 ```
+#### Document - 导入数据与AI协作
+* document_loaders
+```py
+from langchain.document_loaders import UnstructuredPDFLoader,UnstructuredURLLoader,HNLoader
 
+# UnstructuredPDFLoader
+from langchain.document_loaders import UnstructuredPDFLoader
+loader = UnstructuredPDFLoader("example_data/layout-parser-paper.pdf")
+data = loader.load()
 
+# UnstructuredURLLoader
+urls = [
+    "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-8-2023",
+    "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-9-2023"
+]
+loader = UnstructuredURLLoader(urls=urls)
+data = loader.load()
+```
+#### Chains - 将AI与各种功能组合在一起
+* SimpleSequentialChain
+```py
+from langchain.llms import OpenAI
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+from langchain.chains import SimpleSequentialChain
 
+template = """Your job is to come up with a classic dish from the area that the users suggests.
+% USER LOCATION
+{user_location}
 
+YOUR RESPONSE:
+"""
+prompt_template = PromptTemplate(input_variables=["user_location"], template=template)
+# 提供菜式的交互链
+location_chain = LLMChain(llm=llm, prompt=prompt_template)
+
+template = """Given a meal, give a short and simple recipe on how to make that dish at home.
+% MEAL
+{user_meal}
+
+YOUR RESPONSE:
+"""
+prompt_template = PromptTemplate(input_variables=["user_meal"], template=template)
+# 提供菜谱的交互链
+meal_chain = LLMChain(llm=llm, prompt=prompt_template)
+
+overall_chain = SimpleSequentialChain(chains=[location_chain, meal_chain], verbose=True)
+review = overall_chain.run("GuangZhou")
+```
+
+* load_qa_chain
+```py
+from langchain.llms import OpenAI
+from langchain.chains.question_answering import load_qa_chain
+
+chain = load_qa_chain(OpenAI(temperature=0), chain_type="stuff", memory=memory,prompt=memory)
+query = "who is elon musk?"
+chain.run(input_documents=docs, question=query)
+```
+
+#### Agents - 自动选择工具配合AI
+```py
+agent = initialize_agent(
+    agent="zero-shot-react-description",
+    tools=[wa_tool, search_tool],
+    llm=llm,
+    verbose=True,
+)
+r_1 = agent("how much is bitcoin price right now?")
+r_2 = agent("Integral of x * (log(x)^2)")
+```
 
