@@ -34,4 +34,69 @@ LangChain是一个AI应用开发框架，用来简化使用大语言模型来赋
 #### Embedding
  * 可理解为将数据转换为向量的过程。
 
+##
+
+### 常用模块浅析
+#### Models - 与AI交互的接口
+* OpenAI - LLMs
+```py
+from langchain.llms import OpenAI
+
+llm = OpenAI(model_name="text-ada-001", openai_api_key=openai_api_key)
+llm("What day comes after Friday?")
+```
+
+* ChatOpenAI - ChatModels
+```py
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage, AIMessage
+chat = ChatOpenAI(model_name="gpt-3.5-turbo",temperature=0.5, openai_api_key=openai_api_key)
+
+# 提供相关配置
+chat(
+    [
+      SystemMessage(content="You are elon musk,you must act as him"),
+      HumanMessage(content="who are you?")
+    ]
+)
+
+# 作为一个大模型参数 
+llm_chain = LLMChain(llm=chat, prompt=prompt，memory=memory)
+llm_chain.run("who are you?")
+```
+
+* OpenAIEmbeddings
+```py
+from langchain.embeddings import OpenAIEmbeddings
+
+embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+text = "Hi! It's time for the beach"
+text_embedding = embeddings.embed_query(text)
+```
+
+#### Prompts
+* PromptTemplate
+```py
+from langchain.llms import OpenAI
+from langchain import PromptTemplate
+
+llm = OpenAI(model_name="text-davinci-003", openai_api_key=openai_api_key)
+template = """
+I really want to travel to {location}. What should I do there?
+
+Respond in one short sentence
+"""
+
+prompt = PromptTemplate(
+    input_variables=["location"],
+    template=template,
+)
+
+final_prompt = prompt.format(location='GuangZhou')
+llm(final_prompt)
+```
+
+
+
+
 
