@@ -36,7 +36,7 @@ LangChain是一个AI应用开发框架，用来简化使用大语言模型来赋
 
 ##
 
-### 常用模块浅析
+### 常用模块演示（仅作简单示例，详情看demo源码）
 #### Models - 与AI交互的接口
 * OpenAI - LLMs
 ```py
@@ -116,29 +116,12 @@ data = loader.load()
 #### Chains - 将AI与各种功能组合在一起
 * SimpleSequentialChain
 ```py
-from langchain.llms import OpenAI
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
-from langchain.chains import SimpleSequentialChain
-
-template = """Your job is to come up with a classic dish from the area that the users suggests.
-% USER LOCATION
-{user_location}
-
-YOUR RESPONSE:
-"""
-prompt_template = PromptTemplate(input_variables=["user_location"], template=template)
 # 提供菜式的交互链
+prompt_template = PromptTemplate(input_variables=["user_location"], template=template)
 location_chain = LLMChain(llm=llm, prompt=prompt_template)
 
-template = """Given a meal, give a short and simple recipe on how to make that dish at home.
-% MEAL
-{user_meal}
-
-YOUR RESPONSE:
-"""
-prompt_template = PromptTemplate(input_variables=["user_meal"], template=template)
 # 提供菜谱的交互链
+prompt_template = PromptTemplate(input_variables=["user_meal"], template=template)
 meal_chain = LLMChain(llm=llm, prompt=prompt_template)
 
 overall_chain = SimpleSequentialChain(chains=[location_chain, meal_chain], verbose=True)
